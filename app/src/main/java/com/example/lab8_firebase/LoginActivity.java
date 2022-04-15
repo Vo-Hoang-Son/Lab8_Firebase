@@ -75,9 +75,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                        signIn();
-
-                    // ...
+                //signIn();
+                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+                startActivityForResult(intent,RC_SIGN_IN);
 
             }
         });
@@ -142,8 +142,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void handleSignInResult(GoogleSignInResult result){
         if(result.isSuccess()){
-            Toast.makeText(getApplicationContext(),"Sign in Successfully! Wellcome:  "+account.getDisplayName(),Toast.LENGTH_LONG).show();
             gotoProfile();
+            Toast.makeText(LoginActivity.this,"Sign in Successfully! Wellcome:  "+account.getDisplayName(),Toast.LENGTH_LONG).show();
+
         }else{
             Toast.makeText(getApplicationContext(),"Sign in cancel",Toast.LENGTH_LONG).show();
         }

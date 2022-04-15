@@ -160,7 +160,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
 
     private void handleSignInResult(GoogleSignInResult result){
         if(result.isSuccess()){
-
+            new RegisterActivity();
             editName.setText(account.getDisplayName());
             editEmail.setText(account.getEmail());
             Toast.makeText(RegisterActivity.this,"Register success:  "+account.getEmail(),Toast.LENGTH_LONG).show();

@@ -32,6 +32,9 @@ public class FaceActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.face_screen);
 
+        //Toast.makeText(FaceActivity.this,"Sign in Successfully! Wellcome:  "+account.getDisplayName(),Toast.LENGTH_LONG).show();
+
+
         fAuth = FirebaseAuth.getInstance();
         gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -41,6 +44,7 @@ public class FaceActivity extends AppCompatActivity implements GoogleApiClient.O
                 .enableAutoManage(this,this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
+        //Toast.makeText(FaceActivity.this,"Sign in Successfully! Wellcome:  "+account.getDisplayName(),Toast.LENGTH_LONG).show();
 
         Button btnLogin = findViewById(R.id.btnReturn);
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +75,7 @@ public class FaceActivity extends AppCompatActivity implements GoogleApiClient.O
         if(opr.isDone()){
             GoogleSignInResult result=opr.get();
             handleSignInResult(result);
+            Toast.makeText(FaceActivity.this,"Sign in Successfully! Wellcome:  "+account.getDisplayName(),Toast.LENGTH_LONG).show();
         }else{
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
