@@ -63,7 +63,6 @@ public class FaceActivity extends AppCompatActivity implements GoogleApiClient.O
                                 }
                             }
                         });
-
             }
         });
     }

@@ -1,6 +1,7 @@
 package com.example.lab8_firebase;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +23,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -42,8 +45,8 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     private EditText editRePass;
 
     private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        startActivityForResult(intent,RC_SIGN_IN);
     }
 
     @Override
@@ -78,7 +81,13 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signIn();
+                Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
+                        new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status status) {
+                                signIn();
+                            }
+                        });
             }
         });
 
@@ -155,12 +164,16 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
         if(requestCode==RC_SIGN_IN){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
+            //Intent intent=new Intent(RegisterActivity.this,RegisterActivity.class);
+            //startActivity(intent);
+
         }
     }
 
     private void handleSignInResult(GoogleSignInResult result){
         if(result.isSuccess()){
             new RegisterActivity();
+            account = GoogleSignIn.getLastSignedInAccount(RegisterActivity.this);
             editName.setText(account.getDisplayName());
             editEmail.setText(account.getEmail());
             Toast.makeText(RegisterActivity.this,"Register success:  "+account.getEmail(),Toast.LENGTH_LONG).show();
