@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "938988661274",
+    "firebase_url": "https://lab08-lttbdd-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "lab08-lttbdd",
     "storage_bucket": "lab08-lttbdd.appspot.com"
   },
@@ -27,7 +28,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "938988661274-obbhu03sh37a7lck3h031dagtts769f0.apps.googleusercontent.com",
+              "client_id": "938988661274-ime07vkec1ifdfvsspop2k94cbjoj5j3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -56,7 +57,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "938988661274-obbhu03sh37a7lck3h031dagtts769f0.apps.googleusercontent.com",
+              "client_id": "938988661274-ime07vkec1ifdfvsspop2k94cbjoj5j3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -2,8 +2,11 @@ package com.example.lab8_firebase;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +21,15 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 
 public class FaceActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
@@ -26,14 +37,19 @@ public class FaceActivity extends AppCompatActivity implements GoogleApiClient.O
     private GoogleSignInOptions gso;
     private FirebaseAuth fAuth;
     private GoogleSignInAccount account;
+    ImageView btnHappy;
+    ImageView btnUnHappy;
+    ImageView btnNormal;
+    DatabaseReference mDatasbase;
+    int happy = 0;
+    int normal = 0;
+    int unhappy = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.face_screen);
-
-        //Toast.makeText(FaceActivity.this,"Sign in Successfully! Wellcome:  "+account.getDisplayName(),Toast.LENGTH_LONG).show();
-
 
         fAuth = FirebaseAuth.getInstance();
         gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -44,7 +60,6 @@ public class FaceActivity extends AppCompatActivity implements GoogleApiClient.O
                 .enableAutoManage(this,this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
-        //Toast.makeText(FaceActivity.this,"Sign in Successfully! Wellcome:  "+account.getDisplayName(),Toast.LENGTH_LONG).show();
 
         Button btnLogin = findViewById(R.id.btnReturn);
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +80,90 @@ public class FaceActivity extends AppCompatActivity implements GoogleApiClient.O
                         });
             }
         });
+
+        btnHappy = findViewById(R.id.imgHappy);
+        btnNormal = findViewById(R.id.imgNornal);
+        btnUnHappy = findViewById(R.id.imgUnhappy);
+
+        mDatasbase = FirebaseDatabase.getInstance().getReference("User");
+        String userId = mDatasbase.push().getKey();
+        mDatasbase.child(userId).addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                User user = snapshot.getValue(User.class);
+
+                Log.d(String.valueOf(this), "User name: " + user.getName() + ", email " + user.getEmail());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w(String.valueOf(this), "Failed to read value.", error.toException());
+
+            }
+        });
+        btnHappy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                happy+=1;
+                mDatasbase.child(userId).child("happy").setValue(happy).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getApplicationContext(),"Happy is update.", Toast.LENGTH_LONG).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(),"Happy don't update.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                );
+                Toast.makeText(getApplicationContext(),"Happy: "+happy, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        btnNormal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatasbase.child(userId).child("normal").setValue(normal+=1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getApplicationContext(),"Normal is update.", Toast.LENGTH_LONG).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(),"Normal don't update.", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                );
+                Toast.makeText(getApplicationContext(),"Normal: "+normal, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        btnUnHappy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDatasbase.child(userId).child("unhappy").setValue(unhappy+=1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getApplicationContext(),"UnHappy is update.", Toast.LENGTH_LONG).show();
+                    }
+
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getApplicationContext(),"UnHappy don't update.", Toast.LENGTH_LONG).show();
+                    }
+                }
+                );
+                Toast.makeText(getApplicationContext(),"Unhappy: "+unhappy, Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     @Override
@@ -75,6 +174,13 @@ public class FaceActivity extends AppCompatActivity implements GoogleApiClient.O
             GoogleSignInResult result=opr.get();
             handleSignInResult(result);
             Toast.makeText(FaceActivity.this,"Sign in Successfully! Wellcome:  "+account.getDisplayName(),Toast.LENGTH_LONG).show();
+            mDatasbase = FirebaseDatabase.getInstance().getReference("User");
+            String userId = mDatasbase.push().getKey();
+            String name = account.getDisplayName();
+            String image = "";
+            String email = account.getEmail();
+            User user = new User(name, image, normal, happy, unhappy, email);
+            mDatasbase.child(userId).setValue(user);
         }else{
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
@@ -95,7 +201,7 @@ public class FaceActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void gotoMainActivity(){
-        Intent intent=new Intent(this,MainActivity.class);
+        Intent intent=new Intent(this,FaceActivity.class);
         startActivity(intent);
     }
 

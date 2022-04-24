@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView22"
+        android:id="@+id/imgHappy"
         android:layout_width="105dp"
         android:layout_height="71dp"
         android:layout_marginStart="64dp"
@@ -17,22 +17,22 @@
         app:srcCompat="@drawable/group_3__1_" />
 
     <ImageView
-        android:id="@+id/imageView23"
+        android:id="@+id/imgUnhappy"
         android:layout_width="88dp"
         android:layout_height="78dp"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="64dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView24"
+        app:layout_constraintTop_toTopOf="@+id/imgNornal"
         app:srcCompat="@drawable/group_4" />
 
     <ImageView
-        android:id="@+id/imageView24"
+        android:id="@+id/imgNornal"
         android:layout_width="107dp"
         android:layout_height="79dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/imageView23"
-        app:layout_constraintStart_toEndOf="@+id/imageView22"
+        app:layout_constraintEnd_toStartOf="@+id/imgUnhappy"
+        app:layout_constraintStart_toEndOf="@+id/imgHappy"
         app:layout_constraintTop_toBottomOf="@+id/textView8"
         app:srcCompat="@drawable/group_5" />
 
@@ -55,14 +55,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:backgroundTint="#EF77B0"
-        android:text="Button"
+        android:text="Finish"
         app:cornerRadius="25dp"
         app:strokeColor="#ffffff"
         app:strokeWidth="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView24" />
+        app:layout_constraintTop_toBottomOf="@+id/imgNornal" />
 
     <ImageView
         android:id="@+id/imageView"
